@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ColorisPuzzle</string>
+    <string name="title_activity_apropos">About</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_about">About</string>
 </resources>
