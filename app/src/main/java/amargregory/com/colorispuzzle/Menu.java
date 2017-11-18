@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class Menu extends AppCompatActivity {
-    private Button mButton;
+    private Button mButton, buttonPlay;
 
 
     @Override
@@ -15,10 +15,19 @@ public class Menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
         mButton = (Button) findViewById(R.id.button);
+        buttonPlay = (Button) findViewById(R.id.boutonPlay);
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 Intent intent = new Intent(Menu.this, About.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonPlay.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Code here executes on main thread after user presses button
+                Intent intent = new Intent(Menu.this, ColorisPuzzle.class);
                 startActivity(intent);
             }
         });
