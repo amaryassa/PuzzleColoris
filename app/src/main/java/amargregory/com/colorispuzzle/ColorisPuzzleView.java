@@ -7,7 +7,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,6 +21,8 @@ import android.view.SurfaceView;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import static android.graphics.Bitmap.createBitmap;
 
 /**
  * Created by AMAR on 18/11/2017.
@@ -63,7 +68,7 @@ import java.util.Random;
       // taille de la carte
     static final int carteWidth = 8;
     static final int carteHeight = 8;
-    static final int MatWidth = 11;
+    static final int MatWidth = 9;
     static final int MatHeight = 3;
     // taille de la carte
     static final int carteTileSize = 50;
@@ -107,7 +112,8 @@ import java.util.Random;
         private     Thread  cv_thread;        
         SurfaceHolder holder;
         
-        Paint paint;
+        Paint paint, paint1;
+    private Rect rectRouge, rectBleu, rectVert;
         
 
 
@@ -131,6 +137,11 @@ import java.util.Random;
         mRes = mContext.getResources();
         vide = BitmapFactory.decodeResource(mRes, R.drawable.apture1);
         blue = BitmapFactory.decodeResource(mRes, R.drawable.blue);
+     
+       
+
+
+
         rouge = BitmapFactory.decodeResource(mRes, R.drawable.rouge);
         jaune = BitmapFactory.decodeResource(mRes, R.drawable.jeune);
         vert = BitmapFactory.decodeResource(mRes, R.drawable.vert);
@@ -141,7 +152,7 @@ import java.util.Random;
         cellVect_yelow = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_jaune);
         cellVect_green = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_vert);
         cellVect_wite = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_blanc);
-        cellVect_mauve = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_mauve);   
+        cellVect_mauve = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_mauve);
         
 
 
@@ -184,33 +195,108 @@ Log.e("-FCT-", "initparameters()");
     }
 
 
+    private void paintRect(Paint namePaint,Rect nameRect, Canvas canvas, int x, int y , int taille){
+
+        nameRect= new Rect(x, y, taille, taille);
+        namePaint = new Paint();
+        namePaint.setColor(Color.GRAY);
+        canvas.drawRect(nameRect, namePaint);
+
+
+    }
+
 // dessin de la carte du jeu
 
 
-    
     private void paintcarte(Canvas canvas) {
+        int PremiereMargeTop=40;
+        int tailleCarre=blue.getWidth();
+        int espace =(getWidth()-tailleCarre*9)/3;
 
-        int tailleCarre=blue.getHeight();
 
-       
+        float tailleCarreauSansEspace= getWidth()/8;
+        float unEspace=tailleCarreauSansEspace*8/100;
+        Float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
+
+
+        float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
+
+        float matTailleCarreauSansEspace= getWidth()/10;
+        float matUnEspace=matTailleCarreauSansEspace*8/100;
+        Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
+        float amar=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
+        float marge;
+        
+
+
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        Paint paint1 = new Paint();
+        paint1.setColor(Color.RED);
+
+
        // canvas.drawBitmap(blue, 20, 20, null);
        for (int i = 0; i < carteHeight; i++) {
+
             for (int j = 0; j < carteWidth; j++) {
                 
-                canvas.drawBitmap(blue,j*getWidth()/8, 80+i*getWidth()/8, null);
+                            //canvas.drawBitmap(blue,j*getWidth()/8, 80+i*getWidth()/8, null);
+                            // paintRect(paint,rectRouge,canvas,20,20 ,20);
+                            //paintRect(paint1, rectVert,canvas,60,60 ,200);
+                            //canvas.drawColor(Color.BLUE);
+
+
+
+
+
+            
+            canvas.drawRect(new RectF(
+                                        unEspace+j*(tailleCarreauAvecEspace+unEspace),
+                            PremiereMargeTop+unEspace+i*(tailleCarreauAvecEspace),
+                                        unEspace+j*(tailleCarreauAvecEspace+unEspace)+tailleCarreauAvecEspace,
+                            PremiereMargeTop+i*(tailleCarreauAvecEspace) +tailleCarreauAvecEspace),
+                                        paint
+                                    );
+                            //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
+
+
+
+
                
             }
+
+
         }
 
+        
          for (int i = 0; i < MatHeight; i++) {
+             marge=0;
             for (int j = 0; j < MatWidth; j++) {
-                        canvas.drawBitmap(rouge, j * getWidth() / 11, tailleCarre * 8 + 80 + blue.getHeight() + (i * getWidth() / 11), null);
-                        
-                
+
+                if (j %3==0 && j!=0){
+                    marge=marge+amar;
+                }
 
 
+
+                canvas.drawRect(new RectF(
+                                    marge+matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace),
+                                    PremiereMargeTop+DebutTopDeuxiemeMatrice+matUnEspace+i*(matTailleCarreauAvecEspace),
+                                    marge+ matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace)+matTailleCarreauAvecEspace,
+                                    PremiereMargeTop+DebutTopDeuxiemeMatrice+i*(matTailleCarreauAvecEspace) +matTailleCarreauAvecEspace ),
+                            paint1);
+
+
+
+                    //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
             }
-        }
+           
+
+
+         }
+
+
+
     }
 
 
