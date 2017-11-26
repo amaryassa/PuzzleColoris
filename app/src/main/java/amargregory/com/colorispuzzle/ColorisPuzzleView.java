@@ -52,7 +52,7 @@ import static android.graphics.Bitmap.createBitmap;
   // Declaration des objets Ressources et Context permettant d'accéder aux ressources de notre application et de les charger
     private Resources  mRes;    
     private Context   mContext;
-    private RectF petiteMat, grandeMat ;
+    private RectF petiteMat, grandeMat, testRect ;
     private float unEspace;
 
     // tableau modelisant la carte du jeu
@@ -116,9 +116,9 @@ import static android.graphics.Bitmap.createBitmap;
         
         Paint paint, paint1;
     private Rect rectRouge, rectBleu, rectVert;
-        
 
 
+    float a=0, b=0 , c=250,d=250;
 
 
 
@@ -128,6 +128,7 @@ import static android.graphics.Bitmap.createBitmap;
      */
     public ColorisPuzzleView(Context context, AttributeSet attrs) {
             super(context, attrs);
+
             
             
             // permet d'ecouter les surfaceChanged, surfaceCreated, surfaceDestroyed        
@@ -253,6 +254,12 @@ Log.e("-FCT-", "initparameters()");
         paintRed.setColor(Color.RED);
         Paint paintVide = new Paint();
         paintVide.setColor(Color.GREEN);
+        Paint paintYellow = new Paint();
+        paintYellow.setColor(Color.YELLOW);
+
+
+
+
 
 
        // canvas.drawBitmap(blue, 20, 20, null);
@@ -305,13 +312,17 @@ Log.e("-FCT-", "initparameters()");
 
 
 
+
+
                     //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
             }
-           
+
 
 
          }
 
+        testRect= new RectF(a,b,c,d);
+        canvas.drawRect(     testRect,       paintYellow);
 
 
     }
@@ -373,14 +384,18 @@ Log.e("-FCT-", "initparameters()");
       Log.i("-> FCT <-", "onKeyUp: "+ keyCode);       
       return true;   
     }
+
     
     // fonction permettant de recuperer les evenements tactiles
     public boolean onTouchEvent (MotionEvent event) {
-       /*
+
+
         Log.i("-> FCT <-", "event.getX: "+ event.getX());
         Log.i("-> FCT <-", "event.getY: "+ event.getY());
-        Log.i("-> FCT <-", "getWidth: "+ blue.getWidth());
-        */
+        Log.i("-> FCT <-", "getWidth: "+ getWidth());
+
+        //Log.i("-> FCT <-", "getWidth: "+ blue.getWidth());
+
 
         float x=event.getX();
         float y=event.getY();
@@ -413,36 +428,33 @@ Log.e("-FCT-", "initparameters()");
 
 
 
+          switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN:
+            Log.i("-> FCT <-", "onTouchEvent: Down Amar ");
 
 
+                break;
+            case MotionEvent.ACTION_UP:
+              Log.i("-> FCT <-", "onTouchEvent: ACTION_UP ");
+            break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+              Log.i("-> FCT <-", "onTouchEvent: ACTION_POINTER_DOWN ");
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+              Log.i("-> FCT <-", "onTouchEvent: ACTION_POINTER_UP ");
+                break;
+            case MotionEvent.ACTION_MOVE:
+            Log.i("-> FCT <-", "onTouchEvent: ACTION_MOVE ");
 
-
-
-
-
-
-
-       // Log.i("-> FCT <-", "tailleCarreauSansEspace: "+tailleCarreauSansEspace);
-        //Log.i("-> FCT <-", "grandeMat.width: "+ (grandeMat.width()+unEspace));
-         //Log.i("-> FCT <-", "unEspace: "+unEspace);
-        // Log.i("-> FCT <-", "Grand MA wid: "+grandeMat.width());
-         //Log.i("-> FCT <-", "Grand: heig: "+ grandeMat.height());
-        // Log.i("-> FCT <-", "Petit wid: "+petiteMat.width());
-        // Log.i("-> FCT <-", "Petit: heig: "+ petiteMat.height());
-        //Log.i("-> FCT <-", "Mat:X: "+ x/tailleCarreauSansEspace);
-        //Log.i("-> FCT <-", "Mat:y: "+ (y/(unEspace+grandeMat.height())));
-
-        // Log.i("-> FCT <-", "Mat:y: "+ (y/(grandeMat.height()-unEspace)));
-
-
-        //Log.i("-> FCT <-", "X : "+ (x/tailleCarreauSansEspace));
-        //Log.i("-> FCT <-", "Y :"+ (y/(tailleCarreauSansEspace-unEspace)));
-
-
-
-
-
-
-      return super.onTouchEvent(event);     
+                float xx=testRect.width()/2;
+                float yy=testRect.height()/2;
+                a=x-xx;
+                b=y-yy;
+                c=x+250-xx;
+                d=y+250-yy;
+            break;
+        }
+        return true;
+      //return super.onTouchEvent(event);
     }
 }
