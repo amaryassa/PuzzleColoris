@@ -52,6 +52,8 @@ import static android.graphics.Bitmap.createBitmap;
   // Declaration des objets Ressources et Context permettant d'accéder aux ressources de notre application et de les charger
     private Resources  mRes;    
     private Context   mContext;
+    private RectF petiteMat, grandeMat ;
+    private float unEspace;
 
     // tableau modelisant la carte du jeu
     int[][] carte;
@@ -70,6 +72,7 @@ import static android.graphics.Bitmap.createBitmap;
     static final int carteHeight = 8;
     static final int MatWidth = 9;
     static final int MatHeight = 3;
+    static final int PremiereMargeTop=40;
     // taille de la carte
     static final int carteTileSize = 50;
     // taille de la celelule de vecteur
@@ -77,24 +80,23 @@ import static android.graphics.Bitmap.createBitmap;
 
     // constante modelisant les differentes types de cases
 
-    static final int CST_mauve = 6;
-    static final int CST_vert = 5;
-    static final int CST_blue = 4;
-    static final int CST_blanc = 3;
+
     static final int CST_rouge = 2;
-    static final int CST_jaune = 1;
+    static final int CST_noir = 1;
     static final int CST_vide = 0;
+
+
 
     // tableau de reference du terrain
     int[][] ref = {
+            {CST_noir, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_vide, CST_vide, CST_noir, CST_vide, CST_noir, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_rouge, CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide}
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide}
     };
     int[][] refMat = {
 
@@ -205,86 +207,101 @@ Log.e("-FCT-", "initparameters()");
 
     }
 
+
+// récupérer le La position sur la matric
+     private int[] getIandJOfMat(float x, float y) {
+    int i , j;
+    String[] arrI=String.valueOf(x).split("\\.");
+    String[] arrJ=String.valueOf(y).split("\\.");
+    i=Integer.parseInt(arrI[0]); 
+    j=Integer.parseInt(arrJ[0]);  
+
+    int[] position = {i, j};
+        return position;
+
+
+
+    } 
+
 // dessin de la carte du jeu
 
 
     private void paintcarte(Canvas canvas) {
-        int PremiereMargeTop=40;
-        int tailleCarre=blue.getWidth();
-        int espace =(getWidth()-tailleCarre*9)/3;
+         /*---------------------------------------------------------*/
 
+         int tailleCarre=blue.getWidth();
+         int espace =(getWidth()-tailleCarre*9)/3;
 
-        float tailleCarreauSansEspace= getWidth()/8;
-        float unEspace=tailleCarreauSansEspace*8/100;
-        Float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
+         float tailleCarreauSansEspace= getWidth()/8;
+         float unEspace=tailleCarreauSansEspace*8/100;
+         Float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
 
+         float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
 
-        float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
-
-        float matTailleCarreauSansEspace= getWidth()/10;
-        float matUnEspace=matTailleCarreauSansEspace*8/100;
-        Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
-        float amar=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
-        float marge;
+         float matTailleCarreauSansEspace= getWidth()/10;
+         float matUnEspace=matTailleCarreauSansEspace*8/100;
+         Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
+         float EspaceGrand=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
+         float marge;
+    /*---------------------------------------------------------*/
         
 
 
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        Paint paint1 = new Paint();
-        paint1.setColor(Color.RED);
+        Paint paintBlack = new Paint();
+        paintBlack.setColor(Color.BLACK);
+        Paint paintRed = new Paint();
+        paintRed.setColor(Color.RED);
+        Paint paintVide = new Paint();
+        paintVide.setColor(Color.GREEN);
 
 
        // canvas.drawBitmap(blue, 20, 20, null);
        for (int i = 0; i < carteHeight; i++) {
-
             for (int j = 0; j < carteWidth; j++) {
-                
-                            //canvas.drawBitmap(blue,j*getWidth()/8, 80+i*getWidth()/8, null);
-                            // paintRect(paint,rectRouge,canvas,20,20 ,20);
-                            //paintRect(paint1, rectVert,canvas,60,60 ,200);
-                            //canvas.drawColor(Color.BLUE);
+                 grandeMat=new RectF(
+                        unEspace+j*(tailleCarreauAvecEspace+unEspace),
+                        PremiereMargeTop+unEspace+i*(tailleCarreauAvecEspace),
+                        unEspace+j*(tailleCarreauAvecEspace+unEspace)+tailleCarreauAvecEspace,
+                        PremiereMargeTop+i*(tailleCarreauAvecEspace) +tailleCarreauAvecEspace);
 
+                switch (carte[i][j]) {
 
+                    case CST_vide:
+                    canvas.drawRect( grandeMat,paintVide);
+                    break;
+                    case CST_rouge:
+                    canvas.drawRect( grandeMat,paintRed);
+                    break;
+                    case CST_noir:
+                    canvas.drawRect( grandeMat,paintBlack);
+                    break;
+                }
 
-
-
-            
-            canvas.drawRect(new RectF(
-                                        unEspace+j*(tailleCarreauAvecEspace+unEspace),
-                            PremiereMargeTop+unEspace+i*(tailleCarreauAvecEspace),
-                                        unEspace+j*(tailleCarreauAvecEspace+unEspace)+tailleCarreauAvecEspace,
-                            PremiereMargeTop+i*(tailleCarreauAvecEspace) +tailleCarreauAvecEspace),
-                                        paint
-                                    );
-                            //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
 
 
 
 
                
+
+                    
+                //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
             }
-
-
         }
 
         
          for (int i = 0; i < MatHeight; i++) {
              marge=0;
             for (int j = 0; j < MatWidth; j++) {
-
                 if (j %3==0 && j!=0){
-                    marge=marge+amar;
+                    marge=marge+EspaceGrand;
                 }
 
-
-
-                canvas.drawRect(new RectF(
+                petiteMat= new RectF(
                                     marge+matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace),
                                     PremiereMargeTop+DebutTopDeuxiemeMatrice+matUnEspace+i*(matTailleCarreauAvecEspace),
                                     marge+ matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace)+matTailleCarreauAvecEspace,
-                                    PremiereMargeTop+DebutTopDeuxiemeMatrice+i*(matTailleCarreauAvecEspace) +matTailleCarreauAvecEspace ),
-                            paint1);
+                                    PremiereMargeTop+DebutTopDeuxiemeMatrice+i*(matTailleCarreauAvecEspace) +matTailleCarreauAvecEspace );
+                canvas.drawRect(     petiteMat,       paintRed);
 
 
 
@@ -359,29 +376,72 @@ Log.e("-FCT-", "initparameters()");
     
     // fonction permettant de recuperer les evenements tactiles
     public boolean onTouchEvent (MotionEvent event) {
+       /*
         Log.i("-> FCT <-", "event.getX: "+ event.getX());
         Log.i("-> FCT <-", "event.getY: "+ event.getY());
         Log.i("-> FCT <-", "getWidth: "+ blue.getWidth());
-       
+        */
+
+        float x=event.getX();
+        float y=event.getY();
+
+        float tailleCarreauSansEspace= getWidth()/8;
+        float unEspace=tailleCarreauSansEspace*8/100;
+        float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
+
+
+        int monJ =(int) (x/tailleCarreauSansEspace);
+
+      int monI=(int) ((y/(tailleCarreauSansEspace-unEspace))-((y/(tailleCarreauSansEspace-unEspace))/(y/40)));
 
 
 
 
 
-        if (event.getY()<50) {
-        onKeyDown(KeyEvent.KEYCODE_DPAD_UP, null);
 
-      } else if (event.getY()>getHeight()-50) {
-        if (event.getX()>getWidth()-50) {
-            onKeyDown(KeyEvent.KEYCODE_0, null);
-          } else {
-            onKeyDown(KeyEvent.KEYCODE_DPAD_DOWN, null);
-          }
-      } else if (event.getX()<50) {
-        onKeyDown(KeyEvent.KEYCODE_DPAD_LEFT, null);
-      } else if (event.getX()>getWidth()-50) {
-        onKeyDown(KeyEvent.KEYCODE_DPAD_RIGHT, null);
-      }
+ //Log.i("-> FCT <-", "[x,y]= : "+CoordonneeGrandeMatrice[1]+" "+CoordonneeGrandeMatrice[0] );
+
+        Log.i("-> FCT <-", "i: "+monI);
+        Log.i("-> FCT <-", "j: "+monJ);
+
+
+
+        if (monI==7 && monJ==5){
+                        carte[0][0]=CST_rouge;
+            
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+       // Log.i("-> FCT <-", "tailleCarreauSansEspace: "+tailleCarreauSansEspace);
+        //Log.i("-> FCT <-", "grandeMat.width: "+ (grandeMat.width()+unEspace));
+         //Log.i("-> FCT <-", "unEspace: "+unEspace);
+        // Log.i("-> FCT <-", "Grand MA wid: "+grandeMat.width());
+         //Log.i("-> FCT <-", "Grand: heig: "+ grandeMat.height());
+        // Log.i("-> FCT <-", "Petit wid: "+petiteMat.width());
+        // Log.i("-> FCT <-", "Petit: heig: "+ petiteMat.height());
+        //Log.i("-> FCT <-", "Mat:X: "+ x/tailleCarreauSansEspace);
+        //Log.i("-> FCT <-", "Mat:y: "+ (y/(unEspace+grandeMat.height())));
+
+        // Log.i("-> FCT <-", "Mat:y: "+ (y/(grandeMat.height()-unEspace)));
+
+
+        //Log.i("-> FCT <-", "X : "+ (x/tailleCarreauSansEspace));
+        //Log.i("-> FCT <-", "Y :"+ (y/(tailleCarreauSansEspace-unEspace)));
+
+
+
+
+
 
       return super.onTouchEvent(event);     
     }
