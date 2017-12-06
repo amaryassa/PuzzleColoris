@@ -31,33 +31,23 @@ import static android.graphics.Bitmap.createBitmap;
 
  public class ColorisPuzzleView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
+   private static Map<Integer, Paint> PaintColor= new HashMap<Integer, Paint>();
+   private static Map<Integer, RectF> PaintRectVect= new HashMap<Integer, RectF>();
 
-  // Declaration des images
-    private Bitmap blue;
-    private Bitmap vert;
-    private Bitmap vide;
 
-    private Bitmap blanc;
-    private Bitmap rouge;
-    private Bitmap jaune;
-    private Bitmap mauve;
-
-    private Bitmap cellVect_wite;
-    private Bitmap cellVect_red;
-    private Bitmap cellVect_yelow;
-    private Bitmap cellVect_mauve;
-    private Bitmap cellVect_blue;
-    private Bitmap cellVect_green;
-    
   // Declaration des objets Ressources et Context permettant d'accéder aux ressources de notre application et de les charger
     private Resources  mRes;    
     private Context   mContext;
-    private RectF petiteMat, grandeMat, testRect ;
+    private RectF petiteMat, grandeMat, testRect, rectRouge, rectNoir, rectVert, rectMagenta,rectYellow,rectVide,rectVideNoContour ;
     private float unEspace;
+
+
 
     // tableau modelisant la carte du jeu
     int[][] carte;
-    int[][] PetiteMatrice;
+  
+
+     Vecteur[] MonVecteur = new Vecteur[3];
 
     // ancres pour pouvoir centrer la carte du jeu
     int carteTopAnchor;                   // coordonn�es en Y du point d'ancrage de notre carte
@@ -76,14 +66,20 @@ import static android.graphics.Bitmap.createBitmap;
     // taille de la carte
     static final int carteTileSize = 50;
     // taille de la celelule de vecteur
-    static final int vectCellSize = 30;
-
-    // constante modelisant les differentes types de cases
 
 
-    static final int CST_rouge = 2;
-    static final int CST_noir = 1;
+
+
+
     static final int CST_vide = 0;
+    static final int CST_noir = 1;
+    static final int CST_rouge = 2;
+    static final int CST_magenta = 3;
+    static final int CST_yellow = 4;
+    static final int CST_vert = 5;
+    static final int CST_vide_No_Contour = 10;
+
+    float margeVect=0;
 
 
 
@@ -98,65 +94,127 @@ import static android.graphics.Bitmap.createBitmap;
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide}
     };
-    int[][] refMat = {
 
-            {CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide},
-            {CST_rouge, CST_rouge, CST_rouge, CST_vide, CST_rouge, CST_rouge, CST_rouge, CST_vide, CST_rouge, CST_rouge, CST_rouge},
-            {CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide}
-    };
-  
- 
+
 
 
 
         // thread utiliser pour animer les zones de depot des diamants
         private     boolean in      = true;
-        private     Thread  cv_thread;        
+        private     Thread  cv_thread;
         SurfaceHolder holder;
-        
-        Paint paint, paint1;
-    private Rect rectRouge, rectBleu, rectVert;
 
 
     float a=0, b=0 , c=250,d=250;
 
+        float tailleCarreauSansEspace1= getWidth()/8;
+        float unEspace1=tailleCarreauSansEspace1*8/100;
+        Float tailleCarreauAvecEspace1=(getWidth()-(unEspace1*9))/8;
 
+        float DebutTopDeuxiemeMatrice1=PremiereMargeTop+unEspace1+tailleCarreauAvecEspace1*carteHeight;
+
+        float matTailleCarreauSansEspace1= getWidth()/10;
+        float matUnEspace1=matTailleCarreauSansEspace1*8/100;
+        Float matTailleCarreauAvecEspace1=(getWidth()-(matUnEspace1*11))/10;
+        float EspaceGrand1=(getWidth()-(matTailleCarreauAvecEspace1*9+matUnEspace1*10))/2;
+
+
+            //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
+        float leftVect=matUnEspace1 ;
+        float topVect= PremiereMargeTop+DebutTopDeuxiemeMatrice1+matUnEspace1+700;
+        float rightVect=matUnEspace1+ matTailleCarreauAvecEspace1;
+        float bottomVect=PremiereMargeTop+DebutTopDeuxiemeMatrice1 +matTailleCarreauAvecEspace1 ;
+      
+      
+       
 
     /*
-     * @param context 
-     * @param attrs 
+     * @param context
+     * @param attrs
      */
     public ColorisPuzzleView(Context context, AttributeSet attrs) {
             super(context, attrs);
 
-            
-            
-            // permet d'ecouter les surfaceChanged, surfaceCreated, surfaceDestroyed        
+
+
+            // permet d'ecouter les surfaceChanged, surfaceCreated, surfaceDestroyed
           holder = getHolder();
-            holder.addCallback(this); 
+            holder.addCallback(this);
 
              // chargement des images
         mContext = context;
         mRes = mContext.getResources();
-        vide = BitmapFactory.decodeResource(mRes, R.drawable.apture1);
-        blue = BitmapFactory.decodeResource(mRes, R.drawable.blue);
-     
-       
 
 
 
-        rouge = BitmapFactory.decodeResource(mRes, R.drawable.rouge);
-        jaune = BitmapFactory.decodeResource(mRes, R.drawable.jeune);
-        vert = BitmapFactory.decodeResource(mRes, R.drawable.vert);
-        blanc = BitmapFactory.decodeResource(mRes, R.drawable.blanc);
-        mauve = BitmapFactory.decodeResource(mRes, R.drawable.mauve);
-        cellVect_blue = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_blue);
-        cellVect_red = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_rouge);
-        cellVect_yelow = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_jaune);
-        cellVect_green = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_vert);
-        cellVect_wite = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_blanc);
-        cellVect_mauve = BitmapFactory.decodeResource(mRes, R.drawable.cellvect_mauve);
-        
+        rectNoir= new RectF();
+        rectRouge= new RectF();
+        rectVert= new RectF();
+        rectMagenta= new RectF();
+        rectYellow= new RectF();
+        rectVide= new RectF();
+        rectVideNoContour= new RectF();
+
+        Paint paintVectNoir = new Paint();
+        paintVectNoir.setColor(Color.BLACK);
+
+        Paint paintVectRouge = new Paint();
+        paintVectRouge.setColor(Color.RED);
+
+        Paint paintVectVert = new Paint();
+        paintVectVert.setColor(Color.GREEN);
+
+        Paint paintVectMAGENTA = new Paint();
+        paintVectMAGENTA.setColor(Color.MAGENTA);
+
+        Paint paintVectYellow = new Paint();
+        paintVectYellow.setColor(Color.YELLOW);
+
+        Paint paintVectVide = new Paint();
+        paintVectVide.setColor(Color.TRANSPARENT);
+        paintVectVide.setStyle(Paint.Style.STROKE);
+        paintVectVide.setColor(Color.BLACK);
+
+        Paint paintVectVideNoContour = new Paint();
+        paintVectVideNoContour.setColor(Color.TRANSPARENT);
+
+
+        PaintColor.put(CST_vide,paintVectVide);
+        PaintColor.put(CST_noir,paintVectNoir);
+        PaintColor.put(CST_rouge,paintVectRouge);
+        PaintColor.put(CST_magenta,paintVectMAGENTA);
+        PaintColor.put(CST_yellow,paintVectYellow);
+        PaintColor.put(CST_vert,paintVectVert);
+        PaintColor.put(CST_vide_No_Contour,paintVectVideNoContour);
+
+
+        PaintRectVect.put(CST_vide,rectVide);
+        PaintRectVect.put(CST_noir,rectNoir);
+        PaintRectVect.put(CST_rouge,rectRouge);
+        PaintRectVect.put(CST_magenta,rectMagenta);
+        PaintRectVect.put(CST_yellow,rectYellow);
+        PaintRectVect.put(CST_vert,rectVert);
+        PaintRectVect.put(CST_vide_No_Contour,rectVideNoContour);
+
+
+ for (int i = 0; i < 3; i++) {
+            float marg=71;
+
+        if (i!=0)margeVect=margeVect+35+70;
+            MonVecteur[i] = new Vecteur();
+            
+            MonVecteur[i].x1 =  marg+leftVect+142*i;
+            MonVecteur[i].y1 = topVect;
+            MonVecteur[i].x2 = MonVecteur[i].x1 + 71;
+            MonVecteur[i].y2 = MonVecteur[i].y1 + 3 * 57;
+
+
+            MonVecteur[i].isHorizontal = false;
+        }
+
+
+
+
 
 
         // initialisation des parmametres du jeu
@@ -165,8 +223,8 @@ import static android.graphics.Bitmap.createBitmap;
       // creation du thread
         cv_thread   = new Thread(this);
         // prise de focus pour gestion des touches
-        setFocusable(true); 
-    }   
+        setFocusable(true);
+    }
 
 
     // chargement du niveau a partir du tableau de reference du niveau
@@ -176,7 +234,7 @@ import static android.graphics.Bitmap.createBitmap;
                 carte[j][i] = ref[j][i];
             }
         }
-     
+
     }
 
   // initialisation du jeu
@@ -188,6 +246,7 @@ Log.e("-FCT-", "initparameters()");
 
         loadlevel();
         
+
         carteTopAnchor = (getHeight() - carteHeight * carteTileSize) / 2;
         carteLeftAnchor = (getWidth() - carteWidth * carteTileSize) / 2;
 
@@ -198,66 +257,68 @@ Log.e("-FCT-", "initparameters()");
     }
 
 
-    private void paintRect(Paint namePaint,Rect nameRect, Canvas canvas, int x, int y , int taille){
-
-        nameRect= new Rect(x, y, taille, taille);
-        namePaint = new Paint();
-        namePaint.setColor(Color.GRAY);
-        canvas.drawRect(nameRect, namePaint);
-
-
-    }
-
 
 // récupérer le La position sur la matric
      private int[] getIandJOfMat(float x, float y) {
     int i , j;
     String[] arrI=String.valueOf(x).split("\\.");
     String[] arrJ=String.valueOf(y).split("\\.");
-    i=Integer.parseInt(arrI[0]); 
-    j=Integer.parseInt(arrJ[0]);  
+    i=Integer.parseInt(arrI[0]);
+    j=Integer.parseInt(arrJ[0]);
 
     int[] position = {i, j};
         return position;
 
 
 
-    } 
+    }
+
+
+    //--------------------------------------------------------
+ private void getrandomVector(Vecteur vect) {
+        Random generateur = new Random();
+
+        //Min + (Math.random() * (Max - Min))
+        ////rand.nextInt(max - min + 1) + min
+
+        int randomint = 1 + generateur.nextInt(5 - 1);
+        vect.codeColor1 = randomint;
+
+
+        randomint = 1 + generateur.nextInt(5 - 1);
+        vect.codeColor2 = randomint;
+
+
+        randomint = 1 + generateur.nextInt(5 - 1);
+        vect.codeColor3 = randomint;
+
+
+
+        vect.isHorizontal=false;
+    }
+
+
+
+    //--------------------------------------------------------
 
 // dessin de la carte du jeu
-
 
     private void paintcarte(Canvas canvas) {
          /*---------------------------------------------------------*/
 
-         int tailleCarre=blue.getWidth();
-         int espace =(getWidth()-tailleCarre*9)/3;
+        float tailleCarreauSansEspace= getWidth()/8;
+        float unEspace=tailleCarreauSansEspace*8/100;
+        Float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
 
-         float tailleCarreauSansEspace= getWidth()/8;
-         float unEspace=tailleCarreauSansEspace*8/100;
-         Float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
+        float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
 
-         float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
-
-         float matTailleCarreauSansEspace= getWidth()/10;
-         float matUnEspace=matTailleCarreauSansEspace*8/100;
-         Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
-         float EspaceGrand=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
-         float marge;
+        float matTailleCarreauSansEspace= getWidth()/10;
+        float matUnEspace=matTailleCarreauSansEspace*8/100;
+        Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
+        float EspaceGrand=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
+        float marge;
+  
     /*---------------------------------------------------------*/
-        
-
-
-        Paint paintBlack = new Paint();
-        paintBlack.setColor(Color.BLACK);
-        Paint paintRed = new Paint();
-        paintRed.setColor(Color.RED);
-        Paint paintVide = new Paint();
-        paintVide.setColor(Color.GREEN);
-        Paint paintYellow = new Paint();
-        paintYellow.setColor(Color.YELLOW);
-
-
 
 
 
@@ -274,65 +335,97 @@ Log.e("-FCT-", "initparameters()");
                 switch (carte[i][j]) {
 
                     case CST_vide:
-                    canvas.drawRect( grandeMat,paintVide);
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_vide));
                     break;
                     case CST_rouge:
-                    canvas.drawRect( grandeMat,paintRed);
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_rouge));
                     break;
                     case CST_noir:
-                    canvas.drawRect( grandeMat,paintBlack);
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_noir));
                     break;
                 }
 
 
 
-
-
-               
-
-                    
                 //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
             }
         }
 
-        
-         for (int i = 0; i < MatHeight; i++) {
-             marge=0;
-            for (int j = 0; j < MatWidth; j++) {
-                if (j %3==0 && j!=0){
-                    marge=marge+EspaceGrand;
-                }
+for (int i = 0; i < 3; i++) {
 
-                petiteMat= new RectF(
-                                    marge+matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace),
-                                    PremiereMargeTop+DebutTopDeuxiemeMatrice+matUnEspace+i*(matTailleCarreauAvecEspace),
-                                    marge+ matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace)+matTailleCarreauAvecEspace,
-                                    PremiereMargeTop+DebutTopDeuxiemeMatrice+i*(matTailleCarreauAvecEspace) +matTailleCarreauAvecEspace );
-                canvas.drawRect(     petiteMat,       paintRed);
+
+canvas.drawRect( new RectF (),     PaintColor.get(0));
+
+}
 
 
 
+         // for (int i = 0; i < MatHeight; i++) {
+         //    marge=0;
+         //    for (int j = 0; j < MatWidth; j++) {
+         //        if (j %3==0 && j!=0){
+         //            marge=marge+EspaceGrand;
+         //        }
+
+         //        petiteMat= new RectF(
+         //                            marge+matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace),
+         //                            PremiereMargeTop+DebutTopDeuxiemeMatrice+matUnEspace+i*(matTailleCarreauAvecEspace),
+         //                            marge+ matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace)+matTailleCarreauAvecEspace,
+         //                            PremiereMargeTop+DebutTopDeuxiemeMatrice+i*(matTailleCarreauAvecEspace) +matTailleCarreauAvecEspace );
+         //        canvas.drawRect(     petiteMat,       PaintColor.get(1));
 
 
-                    //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
-            }
 
 
 
-         }
+         //            //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
+         //    }
+         //    }
 
-        testRect= new RectF(a,b,c,d);
-        canvas.drawRect(     testRect,       paintYellow);
+        /*testRect= new RectF(a,b,c,d );
+        canvas.drawRect(     testRect,       PaintColor.get(3));*/
+
+
+      
+
+
+
+        canvas.drawRect(new RectF(MonVecteur[1].x1,
+                        MonVecteur[1].y1 ,
+                        MonVecteur[1].x1 + 80,
+                        MonVecteur[1].y1 + 240),
+                PaintColor.get(2));
+         canvas.drawRect(new RectF(MonVecteur[0].x1,
+                        MonVecteur[0].y1 ,
+                        MonVecteur[0].x1 + 80,
+                        MonVecteur[0].y1 + 240),
+                PaintColor.get(3));
+       
+       
+  
+
+                        //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
+
+
+                
+               
+
+
 
 
     }
+  private void paintvect(Canvas canvas) {
 
+        
+        
+    }
 
        // dessin du jeu (fond uni, en fonction du jeu gagne ou pas dessin du plateau et du joueur des diamants et des fleches)
     private void nDraw(Canvas canvas) {
       
     canvas.drawRGB(250,200,250);
     paintcarte(canvas);
+       paintvect(canvas);
   
     } 
 
@@ -378,13 +471,6 @@ Log.e("-FCT-", "initparameters()");
 
  
   
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-      Log.i("-> FCT <-", "onKeyUp: "+ keyCode);       
-      return true;   
-    }
-
     
     // fonction permettant de recuperer les evenements tactiles
     public boolean onTouchEvent (MotionEvent event) {
@@ -393,6 +479,7 @@ Log.e("-FCT-", "initparameters()");
         Log.i("-> FCT <-", "event.getX: "+ event.getX());
         Log.i("-> FCT <-", "event.getY: "+ event.getY());
         Log.i("-> FCT <-", "getWidth: "+ getWidth());
+
 
         //Log.i("-> FCT <-", "getWidth: "+ blue.getWidth());
 
@@ -403,7 +490,15 @@ Log.e("-FCT-", "initparameters()");
         float tailleCarreauSansEspace= getWidth()/8;
         float unEspace=tailleCarreauSansEspace*8/100;
         float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
+        float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
 
+        float matTailleCarreauSansEspace= getWidth()/10;
+        float matUnEspace=matTailleCarreauSansEspace*8/100;
+        Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
+        float EspaceGrand=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
+        float marge;
+        Log.i("-> FCT <-", "EspaceGrand: "+ EspaceGrand);
+        Log.i("-> FCT <-", "premier espace: "+( matUnEspace+matTailleCarreauAvecEspace));
 
         int monJ =(int) (x/tailleCarreauSansEspace);
 
@@ -426,7 +521,8 @@ Log.e("-FCT-", "initparameters()");
             
         }
 
-
+        //float xx=testRect.width()/2;
+        //float yy=testRect.height()/2;
 
           switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -436,7 +532,7 @@ Log.e("-FCT-", "initparameters()");
                 break;
             case MotionEvent.ACTION_UP:
               Log.i("-> FCT <-", "onTouchEvent: ACTION_UP ");
-            break;
+                break;
             case MotionEvent.ACTION_POINTER_DOWN:
               Log.i("-> FCT <-", "onTouchEvent: ACTION_POINTER_DOWN ");
                 break;
@@ -445,13 +541,10 @@ Log.e("-FCT-", "initparameters()");
                 break;
             case MotionEvent.ACTION_MOVE:
             Log.i("-> FCT <-", "onTouchEvent: ACTION_MOVE ");
-
-                float xx=testRect.width()/2;
-                float yy=testRect.height()/2;
-                a=x-xx;
-                b=y-yy;
-                c=x+250-xx;
-                d=y+250-yy;
+               /* a=x-xx;
+               b=y-yy;
+                c=x+400-xx;
+               d=y+400-yy;*/
             break;
         }
         return true;
