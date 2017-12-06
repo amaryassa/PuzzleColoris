@@ -7,16 +7,7 @@
     tools:context="amargregory.com.colorispuzzle.Menu">
 
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="43dp"
-            tools:layout_editor_absoluteY="140dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="52dp" />
+
 
         <Button
             android:id="@+id/boutonPlay"
@@ -25,10 +16,30 @@
             android:text="Play"
             tools:layout_editor_absoluteX="263dp"
             tools:layout_editor_absoluteY="128dp"
-            android:layout_alignBaseline="@+id/button"
-            android:layout_alignBottom="@+id/button"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="95dp" />
+            android:layout_marginTop="75dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            tools:ignore="HardcodedText" />
 
-    </RelativeLayout>
+    <ToggleButton
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/boutonPlay"
+        android:layout_below="@+id/boutonPlay"
+        android:layout_marginTop="44dp"
+        android:text="ToggleButton"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/toggleButton"
+        android:layout_below="@+id/toggleButton"
+        android:layout_marginTop="60dp"
+        android:text="Button"
+        tools:ignore="HardcodedText" />
+
+</RelativeLayout>
 
