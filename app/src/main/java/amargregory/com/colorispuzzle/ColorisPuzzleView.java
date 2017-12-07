@@ -198,18 +198,25 @@ import static android.graphics.Bitmap.createBitmap;
 
 
  for (int i = 0; i < 3; i++) {
-            float marg=71;
-
-        if (i!=0)margeVect=margeVect+35+70;
+            float marg=13;
+        margeVect=35+(70*3);
             MonVecteur[i] = new Vecteur();
-            
-            MonVecteur[i].x1 =  marg+leftVect+142*i;
+
+            MonVecteur[i].x1 =  marg+leftVect+margeVect*i;
             MonVecteur[i].y1 = topVect;
             MonVecteur[i].x2 = MonVecteur[i].x1 + 71;
             MonVecteur[i].y2 = MonVecteur[i].y1 + 3 * 57;
+             MonVecteur[i].codeColor0=CST_noir;
+             MonVecteur[i].codeColor3=CST_noir;
+             MonVecteur[i].codeColor5=CST_noir;
+             MonVecteur[i].codeColor6=CST_noir;
+             MonVecteur[i].codeColor2=CST_noir;
+             MonVecteur[i].codeColor8=CST_noir;
+     
 
 
             MonVecteur[i].isHorizontal = false;
+            MonVecteur[i].position = 2;
         }
 
 
@@ -275,7 +282,43 @@ Log.e("-FCT-", "initparameters()");
 
 
     }
+/*/************************************************************************************/
+  private void rotate (Vecteur mvect){
+        if(mvect.position==1){//top 
+      
+            mvect.codeColor5=mvect.codeColor1;
+            mvect.codeColor3=mvect.codeColor7;
+            mvect.codeColor1=10;
+        mvect.codeColor7=10;
+            mvect.position=2;
 
+        }
+        else if (mvect.position==2) {//right 
+            mvect.codeColor7=mvect.codeColor5;
+            mvect.codeColor1=mvect.codeColor3;
+            mvect.codeColor5=10;
+            mvect.codeColor3=10;
+            mvect.position=3;
+        }
+        else if (mvect.position==3) { // bottom
+            mvect.codeColor3=mvect.codeColor7;
+            mvect.codeColor5=mvect.codeColor1;
+            mvect.codeColor7=10;
+           mvect.codeColor1=10;
+            mvect.position=4;
+        }
+        else if (mvect.position==4) { //left
+              mvect.codeColor1=mvect.codeColor3;
+            mvect.codeColor7=mvect.codeColor5;
+            mvect.codeColor3=10;
+            mvect.codeColor5=10;
+            mvect.position=1;
+        }
+
+      Log.i("-> FCT <-", "position "+( mvect.position));
+}
+
+/*/************************************************************************************/
 
     //--------------------------------------------------------
  private void getrandomVector(Vecteur vect) {
@@ -289,15 +332,16 @@ Log.e("-FCT-", "initparameters()");
 
 
         randomint = 1 + generateur.nextInt(5 - 1);
-        vect.codeColor2 = randomint;
+        vect.codeColor4 = randomint;
 
 
         randomint = 1 + generateur.nextInt(5 - 1);
-        vect.codeColor3 = randomint;
+        vect.codeColor7 = randomint;
 
 
 
         vect.isHorizontal=false;
+        vect.position=1;
     }
 
 
@@ -379,45 +423,35 @@ Log.e("-FCT-", "initparameters()");
 
 int grego=1;
         for (int k = 0; k < 3; k++) {
-            int [] couleurDelaCaseVecteur =new int [3];
-            couleurDelaCaseVecteur[0]=MonVecteur[k].codeColor1;
-            couleurDelaCaseVecteur[1]=MonVecteur[k].codeColor2;
-            couleurDelaCaseVecteur[2]=MonVecteur[k].codeColor3;
+            int [] couleurDelaCaseVecteur =new int [9];
+            couleurDelaCaseVecteur[0]=MonVecteur[k].codeColor0;
+            couleurDelaCaseVecteur[1]=MonVecteur[k].codeColor1;
+            couleurDelaCaseVecteur[2]=MonVecteur[k].codeColor2;
+            couleurDelaCaseVecteur[3]=MonVecteur[k].codeColor3;
+            couleurDelaCaseVecteur[4]=MonVecteur[k].codeColor4;
+            couleurDelaCaseVecteur[5]=MonVecteur[k].codeColor5;
+            couleurDelaCaseVecteur[6]=MonVecteur[k].codeColor6;
+            couleurDelaCaseVecteur[7]=MonVecteur[k].codeColor7;
+            couleurDelaCaseVecteur[8]=MonVecteur[k].codeColor8;
             int NumberCouleur=0;
 
-        int number=0;
+
         for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
 
-if(grego==1) {
-    /* on va afficher que 1 4 7
-            0 1 2
-            3 4 5
-            6 7 8
-     */
-    if(number==1 || number==4 || number==7) {
 
-        canvas.drawRect(new RectF(MonVecteur[k].x1 + (j * (matTailleCarreauAvecEspace + matUnEspace)),
-                        MonVecteur[k].y1 + (i * (matTailleCarreauAvecEspace + matUnEspace)),
-                        MonVecteur[k].x1 + matTailleCarreauAvecEspace + (j * (matTailleCarreauAvecEspace + matUnEspace)),
-                        MonVecteur[k].y1 + matTailleCarreauAvecEspace + (i * (matTailleCarreauAvecEspace + matUnEspace))),
-                PaintColor.get(couleurDelaCaseVecteur[NumberCouleur]));
-        NumberCouleur++;
-    }else{
-        
-
-    }
+                    canvas.drawRect(new RectF(MonVecteur[k].x1 + (j * (matTailleCarreauAvecEspace + matUnEspace)),
+                                    MonVecteur[k].y1 + (i * (matTailleCarreauAvecEspace + matUnEspace)),
+                                    MonVecteur[k].x1 + matTailleCarreauAvecEspace + (j * (matTailleCarreauAvecEspace + matUnEspace)),
+                                    MonVecteur[k].y1 + matTailleCarreauAvecEspace + (i * (matTailleCarreauAvecEspace + matUnEspace))),
+                            PaintColor.get(couleurDelaCaseVecteur[NumberCouleur]));
+                    NumberCouleur++;
 
 
+                }
+        }
+        }
 
-}
-
-                        //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
-
-                    number++;
-
-                }}
-               }
         
         
     }
@@ -529,6 +563,8 @@ if(grego==1) {
           switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
             Log.i("-> FCT <-", "onTouchEvent: Down Amar ");
+
+            rotate(MonVecteur[1]);
 
 
                 break;
