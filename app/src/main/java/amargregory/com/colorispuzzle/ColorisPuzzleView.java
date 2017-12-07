@@ -120,7 +120,7 @@ import static android.graphics.Bitmap.createBitmap;
 
 
             //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
-        float leftVect=matUnEspace1 ;
+        float leftVect=0 ;
         float topVect= PremiereMargeTop+DebutTopDeuxiemeMatrice1+matUnEspace1+700;
         float rightVect=matUnEspace1+ matTailleCarreauAvecEspace1;
         float bottomVect=PremiereMargeTop+DebutTopDeuxiemeMatrice1 +matTailleCarreauAvecEspace1 ;
@@ -211,6 +211,7 @@ import static android.graphics.Bitmap.createBitmap;
 
             MonVecteur[i].isHorizontal = false;
         }
+
 
 
 
@@ -388,9 +389,13 @@ int grego=1;
         for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
 
-
-  
-   
+if(grego==1) {
+    /* on va afficher que 1 4 7
+            0 1 2
+            3 4 5
+            6 7 8
+     */
+    if(number==1 || number==4 || number==7) {
 
         canvas.drawRect(new RectF(MonVecteur[k].x1 + (j * (matTailleCarreauAvecEspace + matUnEspace)),
                         MonVecteur[k].y1 + (i * (matTailleCarreauAvecEspace + matUnEspace)),
@@ -398,11 +403,14 @@ int grego=1;
                         MonVecteur[k].y1 + matTailleCarreauAvecEspace + (i * (matTailleCarreauAvecEspace + matUnEspace))),
                 PaintColor.get(couleurDelaCaseVecteur[NumberCouleur]));
         NumberCouleur++;
-    
+    }else{
+        
+
+    }
 
 
 
-
+}
 
                         //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
 
