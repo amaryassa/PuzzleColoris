@@ -206,12 +206,12 @@ import static android.graphics.Bitmap.createBitmap;
             MonVecteur[i].y1 = topVect;
             MonVecteur[i].x2 = MonVecteur[i].x1 + 71;
             MonVecteur[i].y2 = MonVecteur[i].y1 + 3 * 57;
-             MonVecteur[i].codeColor0=CST_noir;
-             MonVecteur[i].codeColor3=CST_noir;
-             MonVecteur[i].codeColor5=CST_noir;
-             MonVecteur[i].codeColor6=CST_noir;
-             MonVecteur[i].codeColor2=CST_noir;
-             MonVecteur[i].codeColor8=CST_noir;
+             MonVecteur[i].codeColor0=10;
+             MonVecteur[i].codeColor3=10;
+             MonVecteur[i].codeColor5=10;
+             MonVecteur[i].codeColor6=10;
+             MonVecteur[i].codeColor2=10;
+             MonVecteur[i].codeColor8=10;
      
 
 
@@ -289,7 +289,7 @@ Log.e("-FCT-", "initparameters()");
             mvect.codeColor5=mvect.codeColor1;
             mvect.codeColor3=mvect.codeColor7;
             mvect.codeColor1=10;
-        mvect.codeColor7=10;
+            mvect.codeColor7=10;
             mvect.position=2;
 
         }
@@ -559,6 +559,8 @@ int grego=1;
 
         //float xx=testRect.width()/2;
         //float yy=testRect.height()/2;
+        float x11=(70*3)/2;
+        float y11=(57*3)/2;
 
           switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
@@ -579,6 +581,10 @@ int grego=1;
                 break;
             case MotionEvent.ACTION_MOVE:
             Log.i("-> FCT <-", "onTouchEvent: ACTION_MOVE ");
+                MonVecteur[1].x1=x-x11;
+                MonVecteur[1].y1=y-y11;
+               
+
                /* a=x-xx;
                b=y-yy;
                 c=x+400-xx;
