@@ -245,7 +245,9 @@ Log.e("-FCT-", "initparameters()");
         carte = new int[carteHeight][carteWidth];
 
         loadlevel();
-        
+         for (int k = 0; k < 3; k++) {
+            getrandomVector(MonVecteur[k]);
+        }
 
         carteTopAnchor = (getHeight() - carteHeight * carteTileSize) / 2;
         carteLeftAnchor = (getWidth() - carteWidth * carteTileSize) / 2;
@@ -346,76 +348,68 @@ Log.e("-FCT-", "initparameters()");
                 }
 
 
-
                 //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
             }
         }
 
-for (int i = 0; i < 3; i++) {
 
 
-canvas.drawRect( new RectF (),     PaintColor.get(0));
-
-}
-
-
-
-         // for (int i = 0; i < MatHeight; i++) {
-         //    marge=0;
-         //    for (int j = 0; j < MatWidth; j++) {
-         //        if (j %3==0 && j!=0){
-         //            marge=marge+EspaceGrand;
-         //        }
-
-         //        petiteMat= new RectF(
-         //                            marge+matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace),
-         //                            PremiereMargeTop+DebutTopDeuxiemeMatrice+matUnEspace+i*(matTailleCarreauAvecEspace),
-         //                            marge+ matUnEspace+j*(matTailleCarreauAvecEspace+matUnEspace)+matTailleCarreauAvecEspace,
-         //                            PremiereMargeTop+DebutTopDeuxiemeMatrice+i*(matTailleCarreauAvecEspace) +matTailleCarreauAvecEspace );
-         //        canvas.drawRect(     petiteMat,       PaintColor.get(1));
-
-
-
-
-
-         //            //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
-         //    }
-         //    }
-
-        /*testRect= new RectF(a,b,c,d );
-        canvas.drawRect(     testRect,       PaintColor.get(3));*/
-
-
-      
-
-
-
-        canvas.drawRect(new RectF(MonVecteur[1].x1,
-                        MonVecteur[1].y1 ,
-                        MonVecteur[1].x1 + 80,
-                        MonVecteur[1].y1 + 240),
-                PaintColor.get(2));
-         canvas.drawRect(new RectF(MonVecteur[0].x1,
-                        MonVecteur[0].y1 ,
-                        MonVecteur[0].x1 + 80,
-                        MonVecteur[0].y1 + 240),
-                PaintColor.get(3));
-       
-       
-  
-
-                        //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
-
-
-                
-               
 
 
 
 
     }
   private void paintvect(Canvas canvas) {
+     /*---------------------------------------------------------*/
 
+        float tailleCarreauSansEspace= getWidth()/8;
+        float unEspace=tailleCarreauSansEspace*8/100;
+        Float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
+
+        float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
+
+        float matTailleCarreauSansEspace= getWidth()/10;
+        float matUnEspace=matTailleCarreauSansEspace*8/100;
+        Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
+        float EspaceGrand=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
+        float marge;
+  
+    /*---------------------------------------------------------*/
+
+int grego=1;
+        for (int k = 0; k < 3; k++) {
+            int [] couleurDelaCaseVecteur =new int [3];
+            couleurDelaCaseVecteur[0]=MonVecteur[k].codeColor1;
+            couleurDelaCaseVecteur[1]=MonVecteur[k].codeColor2;
+            couleurDelaCaseVecteur[2]=MonVecteur[k].codeColor3;
+            int NumberCouleur=0;
+
+        int number=0;
+        for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+
+
+  
+   
+
+        canvas.drawRect(new RectF(MonVecteur[k].x1 + (j * (matTailleCarreauAvecEspace + matUnEspace)),
+                        MonVecteur[k].y1 + (i * (matTailleCarreauAvecEspace + matUnEspace)),
+                        MonVecteur[k].x1 + matTailleCarreauAvecEspace + (j * (matTailleCarreauAvecEspace + matUnEspace)),
+                        MonVecteur[k].y1 + matTailleCarreauAvecEspace + (i * (matTailleCarreauAvecEspace + matUnEspace))),
+                PaintColor.get(couleurDelaCaseVecteur[NumberCouleur]));
+        NumberCouleur++;
+    
+
+
+
+
+
+                        //canvas.drawBitmap(rouge, marge + j * tailleCarre, (tailleCarre * 8) + 80 + blue.getHeight() + (i * tailleCarre), null);
+
+                    number++;
+
+                }}
+               }
         
         
     }
