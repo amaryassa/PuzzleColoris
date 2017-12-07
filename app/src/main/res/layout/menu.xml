@@ -16,30 +16,66 @@
             android:text="Play"
             tools:layout_editor_absoluteX="263dp"
             tools:layout_editor_absoluteY="128dp"
-            android:layout_marginTop="75dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
     <ToggleButton
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/boutonPlay"
-        android:layout_below="@+id/boutonPlay"
-        android:layout_marginTop="44dp"
         android:text="ToggleButton"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:layout_marginTop="28dp"
+        android:layout_below="@+id/boutonPlay"
+        android:layout_alignStart="@+id/boutonPlay" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/toggleButton"
-        android:layout_below="@+id/toggleButton"
-        android:layout_marginTop="60dp"
         android:text="Button"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:layout_below="@+id/toggleButton"
+        android:layout_alignStart="@+id/toggleButton"
+        android:layout_marginTop="35dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/actualScore"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp" />
+
+    <TextView
+        android:id="@+id/bestScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actualScore"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/actualScore1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/bestScore"
+        android:layout_below="@+id/bestScore"
+        android:layout_marginTop="60dp"
+        android:text="0" />
+
+    <Button
+        android:id="@+id/display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:onClick="displayScore"
+        android:text="display"
+        android:layout_alignBaseline="@+id/bestScore"
+        android:layout_alignBottom="@+id/bestScore"
+        android:layout_toEndOf="@+id/boutonPlay" />
 
 </RelativeLayout>
 
