@@ -4,7 +4,9 @@ package amargregory.com.colorispuzzle;
 public class Vecteur {
 
     public float x1;
+    public float x1_1;
     public float y1;
+    public float y1_1;
     public float x2;
     public float y2;
     
@@ -21,7 +23,6 @@ public class Vecteur {
     public int codeColor6;
     public int codeColor7;
     public int codeColor8;
-  
     public boolean isHorizontal;
     public int position;
 

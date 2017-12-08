@@ -85,14 +85,15 @@ import static android.graphics.Bitmap.createBitmap;
 
     // tableau de reference du terrain
     int[][] ref = {
-            {CST_noir, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_noir, CST_vide, CST_noir, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_rouge, CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide, CST_vide},
             {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
-            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_rouge, CST_vide, CST_vide}
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+            {CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide, CST_vide},
+         
     };
 
 
@@ -204,8 +205,13 @@ import static android.graphics.Bitmap.createBitmap;
 
             MonVecteur[i].x1 =  marg+leftVect+margeVect*i;
             MonVecteur[i].y1 = topVect;
-            MonVecteur[i].x2 = MonVecteur[i].x1 + 71;
-            MonVecteur[i].y2 = MonVecteur[i].y1 + 3 * 57;
+
+            MonVecteur[i].x1_1 =  MonVecteur[i].x1 ;
+            MonVecteur[i].y1_1 = MonVecteur[i].y1;
+
+            MonVecteur[i].x2 = MonVecteur[i].x1 + 71*3;
+            MonVecteur[i].y2 = MonVecteur[i].y1 + 3 * 71;
+
              MonVecteur[i].codeColor0=10;
              MonVecteur[i].codeColor3=10;
              MonVecteur[i].codeColor5=10;
@@ -345,12 +351,63 @@ Log.e("-FCT-", "initparameters()");
     }
 
 
+    /********************************************************************/
+    private int getVectSelect(int x, int y) {
+        int VecteurSelectionnee = -1;
+
+        for (int i = 0; i < 3; i++) {
+            if (x > MonVecteur[i].x1_1 && x < MonVecteur[i].x2 && y > MonVecteur[i].y1_1 && y < MonVecteur[i].y2) {
+                VecteurSelectionnee = i;
+            }
+        }
+
+        return VecteurSelectionnee;
+
+    }
+    /********************************************************************/
+
+
+
+    
+    /********************************************************************/
+        private void itsFree(Vecteur mVect, int i, int j){
+            int maPosition=mVect.position;
+            if (maPosition==1){
+                if (i>1 && i<8){
+                    if(carte[i][j]==CST_vide && carte[i-1][j]==CST_vide && carte[i-2][j]==CST_vide){
+                        carte[i][j]=mVect.codeColor7;
+                        carte[i-1][j]=mVect.codeColor4;
+                        carte[i-2][j]=mVect.codeColor1;
+                    }
+
+                }
+            }else if (maPosition==2){
+
+              
+            }else if (maPosition==3){
+                   if (i>1 && i<8){
+                    if(carte[i][j]==CST_vide && carte[i-1][j]==CST_vide && carte[i-2][j]==CST_vide){
+                        carte[i][j]=mVect.codeColor1;
+                        carte[i-1][j]=mVect.codeColor4;
+                        carte[i-2][j]=mVect.codeColor7;
+                    }
+
+                }
+            }else if (maPosition==4){
+
+            }
+
+        }
+    /********************************************************************/
+
+
 
     //--------------------------------------------------------
 
 // dessin de la carte du jeu
 
     private void paintcarte(Canvas canvas) {
+
          /*---------------------------------------------------------*/
 
         float tailleCarreauSansEspace= getWidth()/8;
@@ -390,7 +447,20 @@ Log.e("-FCT-", "initparameters()");
                     case CST_noir:
                     canvas.drawRect( grandeMat,PaintColor.get(CST_noir));
                     break;
+                    case CST_vide_No_Contour:
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_vide_No_Contour));
+                    break;case CST_vert:
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_vert));
+                    break;case CST_magenta:
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_magenta));
+                    break;case CST_yellow:
+                    canvas.drawRect( grandeMat,PaintColor.get(CST_yellow));
+                    break;
                 }
+
+
+
+
 
 
                 //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
@@ -439,12 +509,11 @@ int grego=1;
         for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
 
-
                     canvas.drawRect(new RectF(MonVecteur[k].x1 + (j * (matTailleCarreauAvecEspace + matUnEspace)),
                                     MonVecteur[k].y1 + (i * (matTailleCarreauAvecEspace + matUnEspace)),
                                     MonVecteur[k].x1 + matTailleCarreauAvecEspace + (j * (matTailleCarreauAvecEspace + matUnEspace)),
                                     MonVecteur[k].y1 + matTailleCarreauAvecEspace + (i * (matTailleCarreauAvecEspace + matUnEspace))),
-                            PaintColor.get(couleurDelaCaseVecteur[NumberCouleur]));
+                             PaintColor.get(couleurDelaCaseVecteur[NumberCouleur]));
                     NumberCouleur++;
 
 
@@ -503,38 +572,41 @@ int grego=1;
         }
     }
     
-   
+int clickeDownY = 0;
+int clickeDownX= 0;
+int prevX= 0;
+int prevY= 0;
+int clickeUpY= 0;
+int clickeUpX= 0;
+int differenceXUpDown= 0;
+int differenceYUpDown= 0;
+int selectedVect=-1;
 
- 
-  
+
+
+
     
     // fonction permettant de recuperer les evenements tactiles
     public boolean onTouchEvent (MotionEvent event) {
-
-
-        Log.i("-> FCT <-", "event.getX: "+ event.getX());
+       /* Log.i("-> FCT <-", "event.getX: "+ event.getX());
         Log.i("-> FCT <-", "event.getY: "+ event.getY());
-        Log.i("-> FCT <-", "getWidth: "+ getWidth());
+        Log.i("-> FCT <-", "getWidth: "+ getWidth());*/
 
 
-        //Log.i("-> FCT <-", "getWidth: "+ blue.getWidth());
-
-
+        //Log.i("-> FCT <-", "getWidth: "+ blue.getWidth())
         float x=event.getX();
         float y=event.getY();
-
         float tailleCarreauSansEspace= getWidth()/8;
         float unEspace=tailleCarreauSansEspace*8/100;
         float tailleCarreauAvecEspace=(getWidth()-(unEspace*9))/8;
         float DebutTopDeuxiemeMatrice=PremiereMargeTop+unEspace+tailleCarreauAvecEspace*carteHeight;
-
         float matTailleCarreauSansEspace= getWidth()/10;
         float matUnEspace=matTailleCarreauSansEspace*8/100;
         Float matTailleCarreauAvecEspace=(getWidth()-(matUnEspace*11))/10;
         float EspaceGrand=(getWidth()-(matTailleCarreauAvecEspace*9+matUnEspace*10))/2;
         float marge;
-        Log.i("-> FCT <-", "EspaceGrand: "+ EspaceGrand);
-        Log.i("-> FCT <-", "premier espace: "+( matUnEspace+matTailleCarreauAvecEspace));
+       //Log.i("-> FCT <-", "EspaceGrand: "+ EspaceGrand);
+        //Log.i("-> FCT <-", "premier espace: "+( matUnEspace+matTailleCarreauAvecEspace));
 
         int monJ =(int) (x/tailleCarreauSansEspace);
 
@@ -542,36 +614,42 @@ int grego=1;
 
 
 
-
-
-
- //Log.i("-> FCT <-", "[x,y]= : "+CoordonneeGrandeMatrice[1]+" "+CoordonneeGrandeMatrice[0] );
-
         Log.i("-> FCT <-", "i: "+monI);
         Log.i("-> FCT <-", "j: "+monJ);
 
-
-
-        if (monI==7 && monJ==5){
-                        carte[0][0]=CST_rouge;
-            
-        }
-
-        //float xx=testRect.width()/2;
-        //float yy=testRect.height()/2;
-        float x11=(70*3)/2;
-        float y11=(57*3)/2;
+            float x11=(71*3)/2;
+            float y11=(71*3);
 
           switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
             case MotionEvent.ACTION_DOWN:
-            Log.i("-> FCT <-", "onTouchEvent: Down Amar ");
 
-            rotate(MonVecteur[1]);
 
+                clickeDownY = (int) event.getY();
+                clickeDownX = (int) event.getX();
+
+                selectedVect= getVectSelect(clickeDownX,clickeDownY);
 
                 break;
             case MotionEvent.ACTION_UP:
-              Log.i("-> FCT <-", "onTouchEvent: ACTION_UP ");
+                    Log.i("-> FCT <-", "onTouchEvent: ACTION_UP ");
+                    clickeUpY = (int) event.getY();
+                    clickeUpX = (int) event.getX();
+                    Log.i("-> FCT <-", "selectedVect: "+selectedVect);
+
+                differenceXUpDown = clickeUpX- clickeDownX;
+                differenceYUpDown = clickeUpY - clickeDownY;
+
+                if (differenceXUpDown==0 && differenceYUpDown==0){
+                   if (selectedVect != -1) rotate(MonVecteur[selectedVect]);
+                }
+
+                if (selectedVect != -1) itsFree (MonVecteur[selectedVect], monI, monJ);
+
+                MonVecteur[selectedVect].x1=MonVecteur[selectedVect].x1_1;
+                MonVecteur[selectedVect].y1=MonVecteur[selectedVect].y1_1;
+
+
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
               Log.i("-> FCT <-", "onTouchEvent: ACTION_POINTER_DOWN ");
@@ -580,9 +658,9 @@ int grego=1;
               Log.i("-> FCT <-", "onTouchEvent: ACTION_POINTER_UP ");
                 break;
             case MotionEvent.ACTION_MOVE:
-            Log.i("-> FCT <-", "onTouchEvent: ACTION_MOVE ");
-                MonVecteur[1].x1=x-x11;
-                MonVecteur[1].y1=y-y11;
+                Log.i("-> FCT <-", "onTouchEvent: ACTION_MOVE ");
+                if (selectedVect != -1){ MonVecteur[selectedVect].x1=x-x11;
+                MonVecteur[selectedVect].y1=y-y11;}
                
 
                /* a=x-xx;
