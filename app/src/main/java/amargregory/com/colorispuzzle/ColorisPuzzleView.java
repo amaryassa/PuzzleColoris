@@ -218,9 +218,6 @@ import static android.graphics.Bitmap.createBitmap;
              MonVecteur[i].codeColor6=10;
              MonVecteur[i].codeColor2=10;
              MonVecteur[i].codeColor8=10;
-     
-
-
             MonVecteur[i].isHorizontal = false;
             MonVecteur[i].position = 2;
         }
@@ -372,31 +369,34 @@ Log.e("-FCT-", "initparameters()");
     /********************************************************************/
         private void itsFree(Vecteur mVect, int i, int j){
             int maPosition=mVect.position;
-            if (maPosition==1){
+            //vertical
+            if (maPosition==1 || maPosition==3){
                 if (i>1 && i<8){
                     if(carte[i][j]==CST_vide && carte[i-1][j]==CST_vide && carte[i-2][j]==CST_vide){
                         carte[i][j]=mVect.codeColor7;
                         carte[i-1][j]=mVect.codeColor4;
                         carte[i-2][j]=mVect.codeColor1;
+
                     }
 
                 }
-            }else if (maPosition==2){
+                //horizontal
+            }else if (maPosition==2 || maPosition==4){
+                if (i>0 && i<9 &&  j>0 && j<7   ){
+                    if(carte[i-1][j-1]==CST_vide && carte[i-1][j]==CST_vide && carte[i-1][j+1]==CST_vide){
+                    carte[i-1][j-1]=mVect.codeColor3;
+                        carte[i-1][j]=mVect.codeColor4;
+                        carte[i-1][j+1]=mVect.codeColor5;
+
+                }
+                }
 
               
-            }else if (maPosition==3){
-                   if (i>1 && i<8){
-                    if(carte[i][j]==CST_vide && carte[i-1][j]==CST_vide && carte[i-2][j]==CST_vide){
-                        carte[i][j]=mVect.codeColor1;
-                        carte[i-1][j]=mVect.codeColor4;
-                        carte[i-2][j]=mVect.codeColor7;
-                    }
-
-                }
-            }else if (maPosition==4){
-
             }
 
+            
+            mVect.x1=mVect.x1_1;
+            mVect.y1=mVect.y1_1;
         }
     /********************************************************************/
 
@@ -580,7 +580,8 @@ int clickeUpY= 0;
 int clickeUpX= 0;
 int differenceXUpDown= 0;
 int differenceYUpDown= 0;
-int selectedVect=-1;
+    int selectedVect=-1;
+
 
 
 
@@ -623,13 +624,9 @@ int selectedVect=-1;
           switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
             case MotionEvent.ACTION_DOWN:
-
-
                 clickeDownY = (int) event.getY();
                 clickeDownX = (int) event.getX();
-
-                selectedVect= getVectSelect(clickeDownX,clickeDownY);
-
+                 selectedVect= getVectSelect(clickeDownX,clickeDownY);
                 break;
             case MotionEvent.ACTION_UP:
                     Log.i("-> FCT <-", "onTouchEvent: ACTION_UP ");
@@ -646,8 +643,8 @@ int selectedVect=-1;
 
                 if (selectedVect != -1) itsFree (MonVecteur[selectedVect], monI, monJ);
 
-                MonVecteur[selectedVect].x1=MonVecteur[selectedVect].x1_1;
-                MonVecteur[selectedVect].y1=MonVecteur[selectedVect].y1_1;
+                //MonVecteur[selectedVect].x1=MonVecteur[selectedVect].x1_1;
+                //MonVecteur[selectedVect].y1=MonVecteur[selectedVect].y1_1;
 
 
                 break;
