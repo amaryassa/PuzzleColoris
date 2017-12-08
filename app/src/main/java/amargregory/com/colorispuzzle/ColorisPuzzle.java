@@ -3,6 +3,7 @@ package amargregory.com.colorispuzzle;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 /**
  * Created by AMAR on 18/11/2017.
@@ -10,6 +11,7 @@ import android.view.View;
 
 public class ColorisPuzzle extends Activity{
     private ColorisPuzzleView mColorisPuzzleView;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

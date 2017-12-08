@@ -427,7 +427,7 @@ void SupMoreThreeSameColor() {
         }
         
             for (int ij = 0; ij < mesI.size(); ij++) { 
-                    carte[mesI.get(ij)][mesJ.get(ij)]=CST_vide;  
+                    carte[mesI.get(ij)][mesJ.get(ij)]=CST_vide;
 
 }
     }
