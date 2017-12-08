@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -32,6 +33,7 @@ import static android.graphics.Bitmap.createBitmap;
  public class ColorisPuzzleView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
    private static Map<Integer, Paint> PaintColor= new HashMap<Integer, Paint>();
+  
    private static Map<Integer, RectF> PaintRectVect= new HashMap<Integer, RectF>();
 
 
@@ -120,6 +122,7 @@ import static android.graphics.Bitmap.createBitmap;
         float EspaceGrand1=(getWidth()-(matTailleCarreauAvecEspace1*9+matUnEspace1*10))/2;
 
 
+
             //canvas.drawRect(new Rect(left, top,right, bottom), paint1);
         float leftVect=0 ;
         float topVect= PremiereMargeTop+DebutTopDeuxiemeMatrice1+matUnEspace1+700;
@@ -198,6 +201,7 @@ import static android.graphics.Bitmap.createBitmap;
         PaintRectVect.put(CST_vide_No_Contour,rectVideNoContour);
 
 
+//initia 
  for (int i = 0; i < 3; i++) {
             float marg=13;
         margeVect=35+(70*3);
@@ -369,7 +373,66 @@ Log.e("-FCT-", "initparameters()");
     }
     /********************************************************************/
 
+/*---------------------------------------------------------------------------*/
+void SupMoreThreeSameColor() {
+    ArrayList<Integer> mesI = new ArrayList<Integer>();
+    ArrayList<Integer> mesJ = new ArrayList<Integer>();
+        int i=0;
+        int j=0;
+        int nbOfsimilarH=0;
+        int nbOfsimilarV=0;
+        int nbOfsimilarT=0;
 
+        while (i < carteHeight) {
+            j=0;
+
+            while (j < carteWidth)
+            {
+                int k=j+1;// le J suivant
+                int l=i+1;// le i suivant
+                if(carte[i][j] != CST_vide) {
+                        while ( k < carteWidth && carte[i][j] == carte[i][k]){
+                            k++;
+                        }
+                    while (  l < carteHeight && carte[i][j] == carte[l][j] ){
+                        l++;
+                    }
+                    nbOfsimilarH=k-j;
+                    if(nbOfsimilarH >=3){
+                        for(int m=j;m <k;m++)
+                        {
+                            nbOfsimilarT++;
+                            mesI.add(i);
+                            mesJ.add(m);
+                        }
+                    }
+                    nbOfsimilarV = l-i;
+                    if(nbOfsimilarV >=3){
+                        Log.i("SimCarte V",Integer.toString(nbOfsimilarV));
+                        for(int m=i;m <l;m++)
+                        {
+                            nbOfsimilarT++;
+                            mesI.add(m);
+                            mesJ.add(j);
+                        }
+                    }
+
+                    nbOfsimilarH=0;
+                    nbOfsimilarV=0;
+                }
+                j=k;
+            }
+
+            i++;
+        }
+        
+            for (int ij = 0; ij < mesI.size(); ij++) { 
+                    carte[mesI.get(ij)][mesJ.get(ij)]=CST_vide;  
+
+}
+    }
+
+/*---------------------------------------------------------------------------*/
 
     
     /********************************************************************/
@@ -384,11 +447,9 @@ Log.e("-FCT-", "initparameters()");
                         carte[i-2][j]=mVect.codeColor1;
                         //une fois insérer, on change les couleurs du vecteur qu'on a remets en place à la fin de la fonction
                         getrandomVector(mVect);
-
                     }
-
                 }
-                //horizontal
+            //horizontal
             }else if (maPosition==2 || maPosition==4){
                 if (i>0 && i<9 &&  j>0 && j<7   ){
                     if(carte[i-1][j-1]==CST_vide && carte[i-1][j]==CST_vide && carte[i-1][j+1]==CST_vide){
@@ -397,8 +458,7 @@ Log.e("-FCT-", "initparameters()");
                         carte[i-1][j+1]=mVect.codeColor5;
                         //une fois insérer, on change les couleurs du vecteur qu'on a remets en place à la fin de la fonction
                         getrandomVector(mVect);
-
-                }
+                    }
                 }
 
               
@@ -407,7 +467,7 @@ Log.e("-FCT-", "initparameters()");
             
             mVect.x1=mVect.x1_1;
             mVect.y1=mVect.y1_1;
-        }
+    }
     /********************************************************************/
 
 
@@ -541,6 +601,7 @@ int grego=1;
     canvas.drawRGB(250,200,250);
     paintcarte(canvas);
        paintvect(canvas);
+       SupMoreThreeSameColor();
   
     } 
 
