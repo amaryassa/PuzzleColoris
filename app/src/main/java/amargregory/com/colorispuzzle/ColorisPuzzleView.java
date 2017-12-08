@@ -219,7 +219,7 @@ import static android.graphics.Bitmap.createBitmap;
              MonVecteur[i].codeColor2=10;
              MonVecteur[i].codeColor8=10;
             MonVecteur[i].isHorizontal = false;
-            MonVecteur[i].position = 2;
+            MonVecteur[i].position = 1;
         }
 
 
@@ -343,6 +343,12 @@ Log.e("-FCT-", "initparameters()");
 
 
 
+        vect.codeColor0=10;
+        vect.codeColor3=10;
+        vect.codeColor5=10;
+        vect.codeColor6=10;
+        vect.codeColor2=10;
+        vect.codeColor8=10;
         vect.isHorizontal=false;
         vect.position=1;
     }
@@ -376,6 +382,8 @@ Log.e("-FCT-", "initparameters()");
                         carte[i][j]=mVect.codeColor7;
                         carte[i-1][j]=mVect.codeColor4;
                         carte[i-2][j]=mVect.codeColor1;
+                        //une fois insérer, on change les couleurs du vecteur qu'on a remets en place à la fin de la fonction
+                        getrandomVector(mVect);
 
                     }
 
@@ -387,6 +395,8 @@ Log.e("-FCT-", "initparameters()");
                     carte[i-1][j-1]=mVect.codeColor3;
                         carte[i-1][j]=mVect.codeColor4;
                         carte[i-1][j+1]=mVect.codeColor5;
+                        //une fois insérer, on change les couleurs du vecteur qu'on a remets en place à la fin de la fonction
+                        getrandomVector(mVect);
 
                 }
                 }
